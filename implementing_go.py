@@ -45,3 +45,38 @@ def place_stone(color, board, fc):
 
 def bulk_place_stones(color, board, stones):
     byteboard = bytearray(board, encoding='ascii')
+    color = ord(color)
+    for fstone in stones:
+        byteboard[fstone] = color
+    return byteboard.decode('ascii') 
+
+def maybe_capture_stones(board, fc):
+    chain, reached = find_reached(board, fc)
+    if not any(board[fr] == EMPTY for fr in reached):
+        board = bulk_place_stones(EMPTY, board, chain)
+        return board, chain
+    else:
+        return board, []
+
+def play_move_incomplete(board, fc, color):
+    if board[fc] != EMPTY:
+        raise IllegalMove
+    board = place_stone(color, board, fc)
+
+    opp_color = swap_colors(color)
+    opp_stones = []
+    my_stones = []
+    for fn in NEIGHBORS[fc]:
+        if board[fn] == color:
+            my_stones.append(fn)
+        elif board[fn] == opp_color:
+            opp_stones.append(fn)
+
+    for fs in opp_stones:
+        board, _ = maybe_captures_stones(board, fs)
+
+    for fs in my_stones:
+        board, _ = maybe_captured_stones(board, fs)
+
+    return board
+

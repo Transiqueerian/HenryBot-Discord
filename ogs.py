@@ -29,7 +29,12 @@ class Player:
         self.data = requests.get(f"https://online-go.com/api/v1/players/{self.id}"
                                  ).json()
         self.link = f"https://online-go.com/player/{self.id}/"
-        
+    
+    def get_text_fields(self):
+        website = self.data["website"]
+        about = self.data["about"]
+        return (website, about)
+
     def get_icon(self, size = "32"):
         icon_link = self.data["icon"]
         if size != "32":

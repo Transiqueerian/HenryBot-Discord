@@ -1,1 +1,5 @@
 .env
+__pycache__/
+maybe_code/
+test-code/
+dogs_user_data.json
